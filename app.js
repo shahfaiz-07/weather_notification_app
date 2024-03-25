@@ -20,14 +20,17 @@ const getData = async (city) => {
         const w_data = await response.json();
         city = city[0].toUpperCase() + city.substring(1);
         if (w_data.cod == "200") {
+navigator.serviceWorker.register("sw.js");
             Notification.requestPermission().then((permission) => {
-                if(permission === "granted") {
-                    const notification = new Notification(
-                        `Today's Weather for ${city}`,
-                        {
-                            body: `Temparature : ${w_data.main.temp}°C\nHumidity : ${w_data.main.humidity} %\nPressure : ${w_data.main.pressure} hPa\nWeather : ${w_data.weather[0].description}`,
-                        }
-                    );
+                if (permission === "granted") {
+                    navigator.serviceWorker.ready.then(function (registration) {
+                        registration.showNotification(
+                            `Today's Weather for ${city}`,
+                            {
+                                body: `Temparature : ${w_data.main.temp}°C\nHumidity : ${w_data.main.humidity} %\nPressure : ${w_data.main.pressure} hPa\nWeather : ${w_data.weather[0].description}`,
+                            }
+                        );
+                    });
                     data.innerText = "Notification Sent!";
                     data.style.color = "green";
                 } else {
