@@ -2,9 +2,7 @@ const data = document.getElementById("data");
 const submit = document.getElementById("submit");
 const city = document.getElementById("city");
 
-data.addEventListener("onchange", () => {
-
-})
+data.addEventListener("onchange", () => {});
 
 submit.addEventListener("click", (e) => {
     e.preventDefault();
@@ -20,7 +18,7 @@ const getData = async (city) => {
         const w_data = await response.json();
         city = city[0].toUpperCase() + city.substring(1);
         if (w_data.cod == "200") {
-navigator.serviceWorker.register("sw.js");
+            navigator.serviceWorker.register("sw.js");
             Notification.requestPermission().then((permission) => {
                 if (permission === "granted") {
                     navigator.serviceWorker.ready.then(function (registration) {
@@ -28,6 +26,9 @@ navigator.serviceWorker.register("sw.js");
                             `Today's Weather for ${city}`,
                             {
                                 body: `Temparature : ${w_data.main.temp}°C\nHumidity : ${w_data.main.humidity} %\nPressure : ${w_data.main.pressure} hPa\nWeather : ${w_data.weather[0].description}`,
+                                icon: "./favicon.ico",
+                                tag: Date.now(),
+                                renotify: true
                             }
                         );
                     });
@@ -37,7 +38,7 @@ navigator.serviceWorker.register("sw.js");
                     data.innerText = "Notification Permission Not Granted";
                     data.style.color = "red";
                 }
-            })
+            });
         } else {
             data.innerText = "City Not Found!";
             data.style.color = "red";
